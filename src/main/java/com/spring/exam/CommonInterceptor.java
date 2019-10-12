@@ -24,6 +24,10 @@ public class CommonInterceptor implements HandlerInterceptor {
 
     private Map<String,User> userMap = new HashMap<>();
 
+    /**
+     * Mock User를 등록한다. 실무에서는 헤더나 쿠키로 넘어오는 토큰을 분석하여
+     * 유효한 유저인지 체크하는 로직이 들어갈 것이다.
+     */
     @PostConstruct
     public void setup() {
         User user = new User("","yeoseong_gae",28);
@@ -32,9 +36,7 @@ public class CommonInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("interceptor");
-        String userId = request.getParameter("userId");
-
+        String userId = request.getParameter("userId"); //이런경우는 없다. 실무에서 유저정보가 보통 헤더나 쿠키에 토큰으로 넘어온다.
         IsAuth annotation = getAnnotation((HandlerMethod)handler, IsAuth.class);
 
         Auth auth = null;
@@ -44,8 +46,7 @@ public class CommonInterceptor implements HandlerInterceptor {
             //NONE이면 PASS
             if(auth == Auth.AUTH){
                 if(ObjectUtils.isEmpty(userMap.get(userId))){
-                    log.info("auth fail");
-                    throw new AuthenticationException("유효한 사용자가 아닙니다.");
+                    throw new AuthenticationException("유효한 사용자가 아닙니다."); //가장 네이밍이 좋아서 사용한 예외클래스이다. 실제는 웹 인증에 사용되지 않는 예외클래스이다.
                 }
             }
         }

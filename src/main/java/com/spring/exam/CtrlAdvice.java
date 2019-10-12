@@ -16,7 +16,6 @@ public class CtrlAdvice {
     protected ResponseEntity<String> example(Exception exception,
                                              Object body,
                                              WebRequest request) throws JsonProcessingException {
-        log.debug("RestCtrlAdvice");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("message:"+exception.getMessage());
     }
 
